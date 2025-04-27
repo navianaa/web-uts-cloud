@@ -18,7 +18,7 @@ jobs:
       with:
         host: 35.219.115.179
         username: ubuntu
-        key: ${{ secrets.EC_GCP_KEY }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
           cd ~/myapp
           git pull origin master

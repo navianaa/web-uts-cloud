@@ -16,11 +16,10 @@ jobs:
     - name: Deploy to EC2
       uses: appleboy/ssh-action@v0.1.6
       with:
-        host: <35.219.115.179>
+        host: 35.219.115.179
         username: ubuntu
-        key: ${{secrets.uts cloud}}
+        key: ${{ secrets.EC2_SSH_KEY }}
         script: |
           cd ~/myapp
           git pull origin master
-          source venv/bin/activate
-          nohup flask run --host=0.0.0.0 &
+          sudo systemctl restart your-app.service

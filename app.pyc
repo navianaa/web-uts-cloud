@@ -1,0 +1,81 @@
+from flask import Flask, render_template_string
+import boto3
+import mysql.connector
+
+app = Flask(__name__)
+
+# Konfigurasi S3
+S3_BUCKET = 'product-bucket179'  # Ganti dengan nama bucket kamu
+S3_REGION = 'asia-southeast2'   # Misal bucket kamu di asia-southeast1
+
+# Konfigurasi Database
+db_config = {
+    'host': '34.101.223.8',  # Ganti dengan IP publik database kamu
+    'user': 'root',
+    'password': 'silviana19',  # Ganti passwordnya
+    'database': 'Ecommerce'  # Ganti nama database
+}
+
+# Template HTML sederhana
+html_template = """
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Produk</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 50px; }
+        .product { text-align: center; }
+        img { max-width: 300px; height: auto; margin-bottom: 20px; }
+        .price { font-size: 24px; color: green; }
+    </style>
+</head>
+<body>
+    <div class="product">
+        <h1>Produk Kami</h1>
+        <img src="{{ image_url }}" alt="Produk">
+        <p class="price">Harga: Rp{{ price }}</p>
+    </div>
+</body>
+</html>
+"""
+
+@app.route('/')
+def index():
+    # Ambil URL gambar dari S3
+   image_urls = [
+     "https://storage.googleapis.com/product-bucket179/aktuator.png",
+     "https://storage.googleapis.com/product-bucket179/Base.png"
+   ]
+
+#s3_url = f"https://storage.googleapis.com/product-bucket179/Let%20me%20free.jpeg"  # Ganti nama file gambarnya
+
+   #s3_client = boto3.client('s3', region_name=S3_REGION)
+    #response = s3_client.list_objects_v2(Bucket=S3_BUCKET)
+
+    #images = []
+    #for obj in response.get('Contents', []):
+       # image_url = f"https://storage.googleapis.com/{S3_BUCKET}/{obj['Key']}"
+        #images.append(image_url)
+
+
+
+
+    # Koneksi ke database
+    connection = mysql.connector.connect(**db_config)
+    cursor = connection.cursor()
+    cursor.execute("SELECT harga FROM produk LIMIT 1;")
+    #harga = cursor.fetchone()[0]
+    #harga_list = cursor.fetchall()
+
+    cursor.close()
+    connection.close()
+
+    #products = zip(images, harga_list)
+    #return render_template_string(html_template, products=products)
+    return render_template_string(html_template, image_url=image_urls, price=harga_list)
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
+
+
+

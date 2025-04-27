@@ -1,0 +1,26 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Deploy to EC2
+      uses: appleboy/ssh-action@v0.1.6
+      with:
+        host: <35.219.115.179>
+        username: ubuntu
+        key: ${{ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBFLK0eO8GsbNr24DmsqPNQzmb5LG/5sxCJEMgcRbLHgFNXp7m+CvgY0feKWX1nfX+59wbpu2eJZnytfhiX5sNi0= google-ssh {"userName":"hasviana3@gmail.com","expireOn":"2025-04-27T09:50:03+0000"}}}
+        script: |
+          cd ~/myapp
+          git pull origin master
+          source venv/bin/activate
+          nohup flask run --host=0.0.0.0 &
